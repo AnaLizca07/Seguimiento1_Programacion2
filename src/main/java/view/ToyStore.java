@@ -16,7 +16,7 @@ public class ToyStore {
             Scanner s = new Scanner(System.in);
             System.out.println("~~~MENU~~~");
             System.out.println("1.Add toy \n2.List toys \n3.Max toy \n4.Min toy \n5.Sort toys \n6.Show by Types\n7.Show Toys Above\n8.Exit" +
-                    "\n9.Search \n10.delete \n11.Show total amount of Toys");
+                    "\n9.Search \n10.delete \n11.Show total amount of Toys\n12.Increase \n13.Decrease");
             op = s.next();
             switch (op) {
                 case "1" -> {
@@ -47,7 +47,7 @@ public class ToyStore {
                 }
                 case "5" -> {
                     System.out.println("~~~SORT TOYS~~~");
-                    System.out.println(impl.sort(impl.listToys()));
+                    System.out.println(impl.sort());
 
                 }
                 case "6" -> {
@@ -66,17 +66,43 @@ public class ToyStore {
                     String name = s.next();
                     System.out.println(impl.search(name));
                 }
-                case "10" -> {
-                    System.out.println("~~~DELETE~~~");
-                    System.out.println("Enter the toy name");
-                    String name = s.next();
-                    System.out.println("Deleting " + impl.search(name));
-                    impl.deleteToys(name);
-                }
+//                case "10" -> {
+//                    System.out.println("~~~DELETE~~~");
+//                    System.out.println("Enter the toy name");
+//                    String name = s.next();
+//                    System.out.println("Deleting " + impl.search(name));
+//                    impl.deleteToys(name);
+//                }
                 case "11"->{
                     System.out.println("~~~SHOW TOTAL AMOUNT OF TOYS~~~");
                     System.out.println("In the store are "+impl.totalToys());
                 }
+                case "12"->{
+                    System.out.println("~~~INCREASE~~~");
+                    System.out.println("Enter the toy name");
+                    String name = s.next();
+                    System.out.println("Enter the amount");
+                    int amount = Integer.parseInt(s.next());
+                    ToyStoreDTO toyStoreDTO = impl.search(name);
+                    System.out.println(impl.increase(toyStoreDTO, amount));
+
+                }
+                case "13"->{
+                    System.out.println("~~~DECREASE~~~");
+                    System.out.println("Enter the toy name");
+                    String name = s.next();
+                    System.out.println("Enter the amount");
+                    int amount = Integer.parseInt(s.next());
+                    ToyStoreDTO toyStoreDTO = impl.search(name);
+                    System.out.println(impl.decrease(toyStoreDTO,amount));
+                }
+//                case "14"->{
+//                    System.out.println("update");
+//                    System.out.println("enter the toy name");
+//                    String name = s.next();
+//                    impl.update(impl.search(name));
+//                    System.out.println(impl.search(name));
+//                }
             }
         } while (!op.equals("8")) ;
     }

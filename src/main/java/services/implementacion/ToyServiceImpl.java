@@ -26,7 +26,7 @@ public class ToyServiceImpl implements ToyStoreImpl {
             FileUtils.saveToys(new File(Constants.PATH_TOYS), toyList);
             return toyList.stream().map(ToyStoreMapper::mapFrom).toList();
         }
-        throw new Exception("This toy is in the list");
+        throw new Exception("This toy is not the list");
     }
 
     @Override
@@ -34,23 +34,16 @@ public class ToyServiceImpl implements ToyStoreImpl {
         return toyList.stream().map(ToyStoreMapper::mapFrom).toList();
     }
 
-    @Override
-    public List<ToyStoreDTO> deleteToys(String name) throws Exception {
-        ToyStoreDTO toy = search(name);
-        if(verifyExist(name)) {
-            toyList.remove(ToyStoreMapper.mapFrom(toy));
-            FileUtils.saveToys(new File(Constants.PATH_TOYS), toyList);
-            return toyList.stream().map(ToyStoreMapper::mapFrom).toList();
-        }
-        throw new Exception("Dont Found");
-    }
-
-
-
-    @Override
-    public List<ToyStoreDTO> sort(List<ToyStoreDTO> toyStoreDTO) throws Exception {
-        return toyStoreDTO.stream().sorted(Comparator.comparing(ToyStoreDTO::name)).toList();
-    }
+//    @Override
+//    public List<ToyStoreDTO> deleteToys(String name) throws Exception {
+//        ToyStoreDTO toy = search(name);
+//        if(verifyExist(name)) {
+//            toyList.remove(ToyStoreMapper.mapFrom(toy));
+//            FileUtils.saveToys(new File(Constants.PATH_TOYS), toyList);
+//            return toyList.stream().map(ToyStoreMapper::mapFrom).toList();
+//        }
+//        throw new Exception("Dont Found");
+//    }
 
     @Override
     public ToyStoreDTO search(String name) throws Exception {
@@ -60,32 +53,41 @@ public class ToyServiceImpl implements ToyStoreImpl {
             return list.getFirst();
         }
         throw new Exception("Dont found");
-
     }
 
     @Override
-    public Object maxToy() throws Exception {
-        Type firstKey = ((TreeMap<Type, Integer>) showByType()).firstKey();
-        Integer firstValue = showByType().get(firstKey);
-        return new AbstractMap.SimpleEntry<>(firstKey,firstValue);
+    public Map.Entry<Type,Integer> maxToy() throws Exception {
+        return sort().entrySet().stream().reduce((first,second)-> second).orElse(null);
     }
 
     @Override
-    public Object minToy() throws Exception {
-        Type lastKey = ((TreeMap<Type, Integer>) showByType()).lastKey();
-        Integer lastValue = showByType().get(lastKey);
-        return new AbstractMap.SimpleEntry<>(lastKey,lastValue);
+    public Map.Entry<Type,Integer> minToy() throws Exception {
+        return sort().entrySet().stream().findFirst().orElse(null);
     }
 
     @Override
-    public Type increase() throws Exception {
-        return null;
+    public List<ToyStoreDTO> increase(ToyStoreDTO toyStoreDTO, int amount) throws Exception {
+        toyList.stream().filter(toy1 -> Objects.equals(toy1.getName(),toyStoreDTO.name()))
+                .peek(toy -> toy.setAmount(toy.getAmount()+amount))
+                .findFirst();
+        FileUtils.saveToys(new File(Constants.PATH_TOYS), toyList);
+        return toyList.stream().map(ToyStoreMapper::mapFrom).toList();
+    }
+    @Override
+    public List<ToyStoreDTO> decrease(ToyStoreDTO toyStoreDTO, int amount) throws Exception {
+        toyList.stream().filter(toy1 -> Objects.equals(toy1.getName(),toyStoreDTO.name()))
+                .peek(toy -> {
+                    if(toy.getAmount()>0){
+                        toy.setAmount(toy.getAmount() - amount);
+                    } else if (toy.getAmount()==0) {
+                        toyList.remove(toy);
+                    }
+                })
+                .findFirst();
+        FileUtils.saveToys(new File(Constants.PATH_TOYS), toyList);
+        return toyList.stream().map(ToyStoreMapper::mapFrom).toList();
     }
 
-    @Override
-    public Type decrease() throws Exception {
-        return null;
-    }
 
     @Override
     public Map<Type, Integer> showByType() throws Exception {
@@ -98,21 +100,26 @@ public class ToyServiceImpl implements ToyStoreImpl {
     }
 
     @Override
-    public List<ToyStoreDTO> showToysAbove(double value) throws Exception {
-        List<ToyStoreDTO> toyAbove = new ArrayList<>();
-        toyAbove.stream().filter(e->e.amount()>value);
-        for ( Toy toy : toyList){
-            if (toy.getAmount()>value){
-            }
-        }
-        return toyAbove;
+    public Map<Type, Integer> sort() throws Exception {
+        return showByType().entrySet().stream()
+                .sorted(Map.Entry.comparingByValue())
+                .collect(Collectors.toMap(
+                        Map.Entry::getKey,
+                        Map.Entry::getValue,
+                        (oldValue, newValue) -> oldValue,
+                        LinkedHashMap::new));
     }
 
+    @Override
+    public List<ToyStoreDTO> showToysAbove(double value) throws Exception {
+        return toyList.stream()
+                .filter(toy -> toy.getPrize() >= value)
+                .toList().stream().map(ToyStoreMapper::mapFrom).toList();
+    }
     @Override
     public Boolean verifyExist(String name) {
         return toyList.stream().anyMatch(e -> e.getName().equalsIgnoreCase(name));
     }
-
     @Override
     public Integer totalToys() throws Exception {
         Integer totalCount = 0;
@@ -122,9 +129,22 @@ public class ToyServiceImpl implements ToyStoreImpl {
         return totalCount;
     }
 
+//    @Override
+//    public void update(ToyStoreDTO toyStoreDTO) throws Exception {
+//        ToyStoreDTO oldToy = search(toyStoreDTO.name());
+//        if(oldToy!=null){
+//            List<ToyStoreDTO> updatedList = new ArrayList<>(toyList.stream()
+//                    .map(ToyStoreMapper::mapFrom).toList());
+//            updatedList.remove(oldToy);
+//            updatedList.add(toyStoreDTO);
+//            List<Toy> toylist = updatedList.stream().map(ToyStoreMapper::mapFrom).toList();
+//            FileUtils.saveToys(new File(Constants.PATH_TOYS),toylist);
+//        }
+//    }
 
     //PREGUNTAR!!!
     public int totalAmount(){
         return toyList.size();
     }
+
 }
