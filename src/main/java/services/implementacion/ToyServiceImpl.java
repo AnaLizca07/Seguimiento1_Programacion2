@@ -4,17 +4,15 @@ import mapping.dtos.ToyStoreDTO;
 import mapping.mappers.ToyStoreMapper;
 import model.Toy;
 import model.Type;
-import services.ToyStoreImpl;
+import services.ToyStoreInt;
 import utilis.Constants;
 import utilis.FileUtils;
-import view.ToyStore;
 
 import java.io.File;
 import java.util.*;
-import java.util.Collections;
 import java.util.stream.Collectors;
 
-public class ToyServiceImpl implements ToyStoreImpl {
+public class ToyServiceImpl implements ToyStoreInt {
     private List<Toy> toyList;
     public ToyServiceImpl(){
         toyList = FileUtils.getToys(new File(Constants.PATH_TOYS));
@@ -26,24 +24,13 @@ public class ToyServiceImpl implements ToyStoreImpl {
             FileUtils.saveToys(new File(Constants.PATH_TOYS), toyList);
             return toyList.stream().map(ToyStoreMapper::mapFrom).toList();
         }
-        throw new Exception("This toy is not the list");
+        throw new Exception("This toy is in the list");
     }
 
     @Override
     public List<ToyStoreDTO> listToys() {
         return toyList.stream().map(ToyStoreMapper::mapFrom).toList();
     }
-
-//    @Override
-//    public List<ToyStoreDTO> deleteToys(String name) throws Exception {
-//        ToyStoreDTO toy = search(name);
-//        if(verifyExist(name)) {
-//            toyList.remove(ToyStoreMapper.mapFrom(toy));
-//            FileUtils.saveToys(new File(Constants.PATH_TOYS), toyList);
-//            return toyList.stream().map(ToyStoreMapper::mapFrom).toList();
-//        }
-//        throw new Exception("Dont Found");
-//    }
 
     @Override
     public ToyStoreDTO search(String name) throws Exception {
@@ -113,7 +100,7 @@ public class ToyServiceImpl implements ToyStoreImpl {
     @Override
     public List<ToyStoreDTO> showToysAbove(double value) throws Exception {
         return toyList.stream()
-                .filter(toy -> toy.getPrize() >= value)
+                .filter(toy -> toy.getPrice() >= value)
                 .toList().stream().map(ToyStoreMapper::mapFrom).toList();
     }
     @Override
@@ -127,24 +114,6 @@ public class ToyServiceImpl implements ToyStoreImpl {
             totalCount += toy.getAmount();
         }
         return totalCount;
-    }
-
-//    @Override
-//    public void update(ToyStoreDTO toyStoreDTO) throws Exception {
-//        ToyStoreDTO oldToy = search(toyStoreDTO.name());
-//        if(oldToy!=null){
-//            List<ToyStoreDTO> updatedList = new ArrayList<>(toyList.stream()
-//                    .map(ToyStoreMapper::mapFrom).toList());
-//            updatedList.remove(oldToy);
-//            updatedList.add(toyStoreDTO);
-//            List<Toy> toylist = updatedList.stream().map(ToyStoreMapper::mapFrom).toList();
-//            FileUtils.saveToys(new File(Constants.PATH_TOYS),toylist);
-//        }
-//    }
-
-    //PREGUNTAR!!!
-    public int totalAmount(){
-        return toyList.size();
     }
 
 }

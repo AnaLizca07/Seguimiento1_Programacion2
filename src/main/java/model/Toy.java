@@ -5,13 +5,13 @@ import java.io.Serializable;
 public class Toy implements Serializable {
     private String name;
     private Type type;
-    private Integer prize;
+    private Integer price;
     private Integer amount;
 
     public Toy(String name, Type type, Integer prize, Integer amount) {
         this.name = name;
         this.type = type;
-        this.prize = prize;
+        this.price = prize;
         this.amount = amount;
     }
 
@@ -31,12 +31,12 @@ public class Toy implements Serializable {
         this.type = type;
     }
 
-    public Integer getPrize() {
-        return prize;
+    public Integer getPrice() {
+        return price;
     }
 
-    public void setPrize(Integer prize) {
-        this.prize = prize;
+    public void setPrice(Integer price) {
+        this.price = price;
     }
 
     public Integer getAmount() {

@@ -1,13 +1,12 @@
 package services;
 
 import mapping.dtos.ToyStoreDTO;
-import model.Toy;
 import model.Type;
 
 import java.util.List;
 import java.util.Map;
 
-public interface ToyStoreImpl {
+public interface ToyStoreInt {
     //add, list
     List<ToyStoreDTO> addToy(ToyStoreDTO toyStoreDTO) throws Exception;
     List<ToyStoreDTO> listToys();

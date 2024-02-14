@@ -2,7 +2,7 @@ package view;
 
 import mapping.dtos.ToyStoreDTO;
 import model.Type;
-import services.ToyStoreImpl;
+import services.ToyStoreInt;
 import services.implementacion.ToyServiceImpl;
 
 import java.util.Scanner;
@@ -10,7 +10,7 @@ import java.util.Scanner;
 public class ToyStore {
     public static void main(String[] args) throws Exception {
         String op = "1";
-        ToyStoreImpl impl = new ToyServiceImpl();
+        ToyStoreInt impl = new ToyServiceImpl();
 
         do {
             Scanner s = new Scanner(System.in);
@@ -25,7 +25,7 @@ public class ToyStore {
                     String name = s.next();
                     System.out.println("Choose the type: \n0.Female\n1.Male\n2.Unisex");
                     Type type = Type.getTypeByValue(Integer.parseInt(s.next()));
-                    System.out.println("Enter the prize");
+                    System.out.println("Enter the price");
                     Integer prize = Integer.valueOf(s.next());
                     impl.addToy(new ToyStoreDTO(name, type, prize, +1));
                 }
