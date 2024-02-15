@@ -1,6 +1,6 @@
 package view;
 
-import mapping.dtos.ToyStoreDTO;
+import mapping.dtos.ToyDTO;
 import model.Type;
 import services.ToyStoreInt;
 import services.implementacion.ToyServiceImpl;
@@ -14,9 +14,21 @@ public class ToyStore {
 
         do {
             Scanner s = new Scanner(System.in);
-            System.out.println("~~~MENU~~~");
-            System.out.println("1.Add toy \n2.List toys \n3.Max toy \n4.Min toy \n5.Sort toys \n6.Show by Types\n7.Show Toys Above\n8.Exit" +
-                    "\n9.Search \n10.delete \n11.Show total amount of Toys\n12.Increase \n13.Decrease");
+            System.out.println("🎲MENU🎲");
+            System.out.println("1.➕Add toy");
+            System.out.println("2.✅List toys");
+            System.out.println("3.🥇Max toy");
+            System.out.println("4.🥉Min toy");
+            System.out.println("5.🫡Sort toys");
+            System.out.println("6.👀Show by Types");
+            System.out.println("7.💎Show Toys Above");
+            System.out.println("8.🔎Search");
+            System.out.println("9.💯Show total amount of Toys");
+            System.out.println("10.📈Increase");
+            System.out.println("11.📉Decrease");
+            System.out.println("12.💰Show total all toys price");
+            System.out.println("13.🚶🏻Exit");
+
             op = s.next();
             switch (op) {
                 case "1" -> {
@@ -27,7 +39,7 @@ public class ToyStore {
                     Type type = Type.getTypeByValue(Integer.parseInt(s.next()));
                     System.out.println("Enter the price");
                     Integer prize = Integer.valueOf(s.next());
-                    impl.addToy(new ToyStoreDTO(name, type, prize, +1));
+                    impl.addToy(new ToyDTO(name, type, prize, +1));
                 }
                 case "2" -> {
                     System.out.println("~~~LIST TOYS~~~");
@@ -60,50 +72,39 @@ public class ToyStore {
                     double number = Integer.parseInt(s.next());
                     System.out.println(impl.showToysAbove(number));
                 }
-                case "9" -> {
+                case "8" -> {
                     System.out.println("~~~SEARCH~~~");
                     System.out.println("Enter the toy name");
                     String name = s.next();
                     System.out.println(impl.search(name));
                 }
-//                case "10" -> {
-//                    System.out.println("~~~DELETE~~~");
-//                    System.out.println("Enter the toy name");
-//                    String name = s.next();
-//                    System.out.println("Deleting " + impl.search(name));
-//                    impl.deleteToys(name);
-//                }
-                case "11"->{
+                case "9"->{
                     System.out.println("~~~SHOW TOTAL AMOUNT OF TOYS~~~");
                     System.out.println("In the store are "+impl.totalToys());
                 }
-                case "12"->{
+                case "10"->{
                     System.out.println("~~~INCREASE~~~");
                     System.out.println("Enter the toy name");
                     String name = s.next();
                     System.out.println("Enter the amount");
                     int amount = Integer.parseInt(s.next());
-                    ToyStoreDTO toyStoreDTO = impl.search(name);
+                    ToyDTO toyStoreDTO = impl.search(name);
                     System.out.println(impl.increase(toyStoreDTO, amount));
-
                 }
-                case "13"->{
+                case "11"->{
                     System.out.println("~~~DECREASE~~~");
                     System.out.println("Enter the toy name");
                     String name = s.next();
                     System.out.println("Enter the amount");
                     int amount = Integer.parseInt(s.next());
-                    ToyStoreDTO toyStoreDTO = impl.search(name);
+                    ToyDTO toyStoreDTO = impl.search(name);
                     System.out.println(impl.decrease(toyStoreDTO,amount));
                 }
-//                case "14"->{
-//                    System.out.println("update");
-//                    System.out.println("enter the toy name");
-//                    String name = s.next();
-//                    impl.update(impl.search(name));
-//                    System.out.println(impl.search(name));
-//                }
+                case "12"->{
+                    System.out.println("~~~SHOW TOTAL ALL TOYS PRICE~~~");
+                    System.out.println(impl.totalPriceAllToys());
+                }
             }
-        } while (!op.equals("8")) ;
+        } while (!op.equals("13")) ;
     }
 }
